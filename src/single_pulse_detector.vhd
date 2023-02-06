@@ -1,18 +1,35 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.all;
-use IEEE.NUMERIC_STD.all;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
 
-entity single_pulse_detector is
-    port
-    (
-        clk          : in std_logic;
-        rst          : in std_logic;
-        input_signal : in std_logic;
-        output_pulse : out std_logic);
-end single_pulse_detector;
+ENTITY single_pulse_detector IS
+    PORT (
+        clk : IN STD_LOGIC;
+        rst : IN STD_LOGIC;
+        input_signal : IN STD_LOGIC;
+        output_pulse : OUT STD_LOGIC);
+END single_pulse_detector;
 
-architecture Behavioral of single_pulse_detector is
+ARCHITECTURE Behavioral OF single_pulse_detector IS
 
-begin
+    SIGNAL ff1 : STD_LOGIC;
+    SIGNAL ff2 : STD_LOGIC;
 
-end Behavioral;
+BEGIN
+
+    PROCESS (clk, rst)
+    BEGIN
+
+        IF rst = '1' THEN
+            ff1 <= '0';
+            ff2 <= '0';
+        ELSIF rising_edge(clk) THEN
+            ff1 <= input_signal;
+            ff2 <= ff1;
+        END IF;
+
+    END PROCESS;
+
+    output_pulse <= ff1 AND NOT ff2;
+
+END Behavioral;

@@ -1,13 +1,53 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.all;
-use IEEE.NUMERIC_STD.all;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+use std.env.stop;
 
-entity single_pulse_detector_tb is
+ENTITY single_pulse_detector_tb IS
+END single_pulse_detector_tb;
 
-end single_pulse_detector_tb;
+ARCHITECTURE Behavioral OF single_pulse_detector_tb IS
 
-architecture Behavioral of single_pulse_detector_tb is
+    SIGNAL clk_tb : STD_LOGIC := '0';
+    SIGNAL rst_tb : STD_LOGIC := '0';
+    SIGNAL input_signal_tb : STD_LOGIC := '0';
+    SIGNAL output_pulse_tb : STD_LOGIC := '0';
 
-begin
+    CONSTANT CP : TIME := 10ns;
 
-end Behavioral;
+BEGIN
+
+    -- Instantiate the unit under test
+    uut : ENTITY work.single_pulse_detector
+        PORT MAP(
+            clk => clk_tb,
+            rst => rst_tb,
+            input_signal => input_signal_tb,
+            output_pulse => output_pulse_tb
+        );
+
+    -- Clock generation process
+    clk_gen : PROCESS
+    BEGIN
+        clk_tb <= '0';
+        WAIT FOR CP/2;
+        clk_tb <= '1';
+        WAIT FOR CP/2;
+    END PROCESS;
+
+    -- Input vector
+    input_gen : process
+    BEGIN
+        rst_tb <= '1';
+        wait for CP;
+        rst_tb <= '0';
+        wait for 2 * CP;
+
+        input_signal_tb <= '1';
+        wait for 5 * CP;
+        input_signal_tb <= '0';
+        wait for 5 * CP;
+        stop;
+    end process;
+
+END Behavioral;
