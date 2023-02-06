@@ -1,22 +1,46 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.all;
-use IEEE.NUMERIC_STD.all;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
 
-entity debounce is
-    generic
-    (
-        clk_freq    : integer := 50_000_000; --system clock frequency in Hz
-        stable_time : integer := 10);        --time button must remain stable in ms
-    port
-    (
-        clk    : in std_logic;   --input clock
-        rst    : in std_logic;   --asynchronous active low reset
-        button : in std_logic;   --input signal to be debounced
-        result : out std_logic); --debounced signal
-end debounce;
+ENTITY debounce IS
+    GENERIC (
+        clk_freq : INTEGER := 50_000_000; --system clock frequency in Hz
+        stable_time : INTEGER := 10); --time button must remain stable in ms
+    PORT (
+        clk : IN STD_LOGIC; --input clock
+        rst : IN STD_LOGIC; --asynchronous active low reset
+        button : IN STD_LOGIC; --input signal to be debounced
+        result : OUT STD_LOGIC); --debounced signal
+END debounce;
 
-architecture Behavioral of debounce is
+ARCHITECTURE Behavioral OF debounce IS
 
-begin
+    SIGNAL flipflops : STD_LOGIC_VECTOR (1 DOWNTO 0); -- Input flip-flop
+    SIGNAL counter_set : STD_LOGIC; -- Sync reset to zero
 
-end Behavioral;
+BEGIN
+
+    counter_set <= flipflops(0) XOR flipflops(1); -- Determine when to start/reset counter.
+
+    PROCESS (clk, rst)
+        VARIABLE count : INTEGER;
+    BEGIN
+        IF rst = '1' THEN
+            flipflops <= (OTHERS => '0');   -- Clear input flipflops.
+            result <= '0';                  -- Clear result register.
+        ELSIF rising_edge (clk) THEN
+            flipflops(0) <= button;         -- Store button value in 1st ff.
+            flipflops(1) <= flipflops(0);   -- Store 1st ff value in 2nd ff.
+
+            IF counter_set = '1' THEN
+                count := 0;
+            ELSIF (count < clk_freq * stable_time / 1000) THEN
+                count := count + 1;
+            ELSE                        -- Stable input is met.
+                result <= flipflops(1); -- Output the stable value.
+            END IF;
+        END IF;
+
+    END PROCESS;
+
+END Behavioral;
