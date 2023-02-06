@@ -1,3 +1,4 @@
 *.xil
+*.Xil
 build/*
 !build/.keep

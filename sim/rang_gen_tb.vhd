@@ -50,7 +50,7 @@ uut : rand_gen
         seed_tb <= "01001111";
         wait for CP;
         rst_tb <= '1';
-        wait for CP;
+        wait for 5 * CP;
         rst_tb <= '0';
         wait for 5 * CP;
         stop;
