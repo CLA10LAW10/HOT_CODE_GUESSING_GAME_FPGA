@@ -1,11 +1,88 @@
-library ieee;
-use ieee.std_logic_1164.all;
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+use std.env.stop;
 
-entity debounce_tb is
-end debounce_tb;
+ENTITY debounce_tb IS
+END debounce_tb;
 
-architecture Behavioral of debounce_tb is
+ARCHITECTURE Behavioral OF debounce_tb IS
 
-begin
+    COMPONENT debounce IS
+        GENERIC (
+            clk_freq : INTEGER := 125_000_000; --system clock frequency in Hz
+            stable_time : INTEGER := 10); --time button must remain stable in ms
+        PORT (
+            clk : IN STD_LOGIC; --input clock
+            rst : IN STD_LOGIC; --asynchronous active low reset
+            button : IN STD_LOGIC; --input signal to be debounced
+            result : OUT STD_LOGIC); --debounced signal
+    END COMPONENT debounce;
 
-end Behavioral;
+    CONSTANT clk_freq_tb : INTEGER := 125_000_000;
+    CONSTANT stable_time_tb : INTEGER := 10;
+
+    SIGNAL clk_tb : STD_LOGIC;
+    SIGNAL rst_tb : STD_LOGIC;
+    SIGNAL button_tb : STD_LOGIC;
+    SIGNAL result_tb : STD_LOGIC;
+
+    CONSTANT CP : TIME := 8ns;
+
+BEGIN
+
+    uut : debounce
+    GENERIC MAP(
+        clk_freq => clk_freq_tb,
+        stable_time => stable_time_tb
+    )
+    PORT MAP(
+        clk => clk_tb,
+        rst => rst_tb,
+        button => button_tb,
+        result => result_tb
+    );
+
+    -- Clock generation process
+    clk_gen : PROCESS
+    BEGIN
+        clk_tb <= '0';
+        WAIT FOR CP/2;
+        clk_tb <= '1';
+        WAIT FOR CP/2;
+    END PROCESS;
+
+    -- Input vector
+    input_gen : PROCESS
+    BEGIN
+        wait for 10 * CP;
+        button_tb <= '1';
+        rst_tb <= '1';
+        wait for CP;
+        rst_tb <= '0';
+
+        button_tb <= '1';
+        wait for 10 * CP;
+        button_tb <= '0';
+        wait for 2000000 * CP;
+        button_tb <= '1';
+        wait for 2000000 * CP;
+        button_tb <= '0';
+        wait for 20000 * CP;
+
+        button_tb <= '1';
+        wait for 10 * CP;
+        button_tb <= '0';
+        wait for 2000000 * CP;
+        button_tb <= '1';
+        wait for 40 * CP;
+        button_tb <= '0';
+        wait for 40 * CP;
+        button_tb <= '1';
+        wait for 2000000 * CP;
+        button_tb <= '0';
+        wait for 200000 * CP;
+
+        stop;
+    END PROCESS;
+
+END Behavioral;

@@ -4,7 +4,7 @@ USE IEEE.NUMERIC_STD.ALL;
 
 ENTITY debounce IS
     GENERIC (
-        clk_freq : INTEGER := 50_000_000; --system clock frequency in Hz
+        clk_freq : INTEGER := 125_000_000; --system clock frequency in Hz
         stable_time : INTEGER := 10); --time button must remain stable in ms
     PORT (
         clk : IN STD_LOGIC; --input clock
@@ -23,7 +23,7 @@ BEGIN
     counter_set <= flipflops(0) XOR flipflops(1); -- Determine when to start/reset counter.
 
     PROCESS (clk, rst)
-        VARIABLE count : INTEGER;
+        VARIABLE count : INTEGER RANGE 0 TO clk_freq * stable_time/1000;
     BEGIN
         IF rst = '1' THEN
             flipflops <= (OTHERS => '0');   -- Clear input flipflops.
@@ -36,8 +36,8 @@ BEGIN
                 count := 0;
             ELSIF (count < clk_freq * stable_time / 1000) THEN
                 count := count + 1;
-            ELSE                        -- Stable input is met.
-                result <= flipflops(1); -- Output the stable value.
+            ELSE                            -- Stable input is met.
+                result <= flipflops(1);     -- Output the stable value.
             END IF;
         END IF;
 
