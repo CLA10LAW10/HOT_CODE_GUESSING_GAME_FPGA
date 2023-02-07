@@ -29,6 +29,17 @@ ARCHITECTURE Behavioral OF number_guess IS
             result : OUT STD_LOGIC); --debounced signal
     END COMPONENT debounce;
 
+    COMPONENT debounce_n IS
+        GENERIC (
+            clk_freq : INTEGER := 125_000_000; --system clock frequency in Hz
+            stable_time : INTEGER := 10); --time button must remain stable in ms
+        PORT (
+            clk : IN STD_LOGIC; --input clock
+            rst : IN STD_LOGIC; --asynchronous active low reset
+            button : IN STD_LOGIC; --input signal to be debounced
+            result : OUT STD_LOGIC); --debounced signal
+    END COMPONENT debounce_n;
+
     COMPONENT rand_gen IS
         PORT (
             clk, rst : IN STD_LOGIC;
@@ -48,7 +59,7 @@ ARCHITECTURE Behavioral OF number_guess IS
 
 BEGIN
 
-    rst_debounce : debounce
+    rst_n_debounce : debounce_n
     GENERIC MAP(
         clk_freq => clk_freq,
         stable_time => stable_time
@@ -92,7 +103,7 @@ BEGIN
         output => secret_number
     );
 
-    game : PROCESS (clk, show_db, rst, enter_db)
+    game : PROCESS (clk, show, rst, enter_db)
     BEGIN
         IF rst = '1' THEN
             green_led <= '0';
@@ -101,7 +112,7 @@ BEGIN
             leds <= (OTHERS => '0');
         ELSE
             IF rising_edge(clk) THEN
-                IF show_db = '1' THEN
+                IF show = '1' THEN
                     leds <= secret_number;
                 ELSIF enter = '1' THEN
                     IF switches = secret_number THEN
@@ -125,46 +136,5 @@ BEGIN
             END IF;
         END IF;
     END PROCESS;
-    --    --show_led : PROCESS (clk, show_db)
-    --    show_led : PROCESS (clk, show)
-    --    begin
-    --        IF show = '1' then
-    --            leds <= secret_number;
-    --        ELSE
-    --            leds <= (OTHERS => '0');
-    --        END IF;
-    --    END PROCESS;
-
-    --    check_number : PROCESS (clk, enter)
-    --    begin
-    --        IF switches = secret_number then
-    --            green_led <= '1';
-    --            blue_led <= '0';
-    --            red_led <= '0';
-    --        ELSIF switches < secret_number then
-    --            green_led <= '0';
-    --            blue_led <= '1';
-    --            red_led <= '0';
-    --        ELSIF switches > secret_number then
-    --            green_led <= '0';
-    --            blue_led <= '0';
-    --            red_led <= '1';
-    --        ELSE
-    --            green_led <= '0';
-    --            blue_led <= '0';
-    --            red_led <= '0';
-
-    --        END IF;
-    --    END PROCESS;
-
-    --    rst_led : PROCESS (clk, rst)
-    --    begin
-    --        IF rst = '1' then
-    --            green_led <= '0';
-    --            blue_led <= '0';
-    --            red_led <= '0';
-    --            leds <= (OTHERS => '0');
-    --        END IF;
-    --    END PROCESS;
 
 END Behavioral;

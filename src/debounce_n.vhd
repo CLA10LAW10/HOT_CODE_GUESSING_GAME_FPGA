@@ -2,7 +2,7 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 
-ENTITY debounce IS
+ENTITY debounce_n IS
     GENERIC (
         clk_freq : INTEGER := 125_000_000; --system clock frequency in Hz
         stable_time : INTEGER := 10); --time button must remain stable in ms
@@ -11,7 +11,7 @@ ENTITY debounce IS
         rst : IN STD_LOGIC; --asynchronous active low reset
         button : IN STD_LOGIC; --input signal to be debounced
         result : OUT STD_LOGIC); --debounced signal
-END debounce;
+END debounce_n;
 
 ARCHITECTURE Behavioral OF debounce IS
 
