@@ -49,10 +49,17 @@ uut : rand_gen
         wait for CP;
         seed_tb <= "01001111";
         wait for CP;
+        rst_tb <= '0';
+        wait for 5 * CP;
         rst_tb <= '1';
         wait for 5 * CP;
         rst_tb <= '0';
         wait for 5 * CP;
+
+        rst_tb <= '1';
+        wait for 3 * CP;
+        rst_tb <= '0';
+        wait for 7 * CP;
         stop;
     end process;
 

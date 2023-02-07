@@ -65,13 +65,13 @@ BEGIN
         show_tb <= '0';
         
         rst_tb <= '0';
-        WAIT FOR CP;
-        rst_tb <= '1';
-        WAIT FOR 10000 * CP;
-        rst_tb <= '0';
-        WAIT FOR 10000 * CP;
-        rst_tb <= '1';
         WAIT FOR 2000000 * CP;
+        rst_tb <= '1';
+        WAIT FOR 4000000 * CP;
+        rst_tb <= '0';
+        WAIT FOR 2000000 * CP;
+        rst_tb <= '1';
+        WAIT FOR 3000000 * CP;
         rst_tb <= '0';
         WAIT FOR 2000000 * CP;
 

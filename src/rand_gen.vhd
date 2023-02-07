@@ -19,23 +19,22 @@ ARCHITECTURE Behavioral OF rand_gen IS
 BEGIN
 
     stateReg : PROCESS (clk, rst)
+        VARIABLE seed_check : NATURAL RANGE 0 TO 1 := 0;
     BEGIN
-        IF rst = '1' THEN
+        IF rst = '0' AND seed_check = 0 THEN
             currstate <= seed;
-            --output <= currstate(7 DOWNTO 4);
-        ELSIF (rising_edge (clk)) THEN
-            --currstate <= seed;
-            --feedback <= currstate(4) XOR currstate(3) XOR currstate(2) XOR currstate(0);
-            --nextstate <= feedback & currstate(7 DOWNTO 1);
+            seed_check := 1;
+        ELSIF (rising_edge (clk)) and seed_check = 0 THEN
             currstate <= nextstate;
-        --elsif rst = '0' THEN
-            --output <= currstate(7 DOWNTO 4);
+        ELSIF rst = '1' THEN
+            seed_check := 0;
+            output <= currstate(7 DOWNTO 4);
         END IF;
     END PROCESS;
 
     feedback <= currstate(4) XOR currstate(3) XOR currstate(2) XOR currstate(0);
     nextstate <= feedback & currstate(7 DOWNTO 1);
 
-    output <= currstate(7 DOWNTO 4);
+    --output <= currstate(7 DOWNTO 4);
 
 END Behavioral;

@@ -1,4 +1,7 @@
 *.xil
 *.Xil
+*.str
+*.jou
+*.log
 build/*
 !build/.keep
