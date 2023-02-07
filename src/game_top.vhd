@@ -48,91 +48,123 @@ ARCHITECTURE Behavioral OF number_guess IS
 
 BEGIN
 
---    rst_debounce : debounce
---    GENERIC MAP(
---        clk_freq => clk_freq,
---        stable_time => stable_time
---    )
---    PORT MAP(
---        clk => clk,
---        rst => rst_db,
---        button => rst,
---        result => rst_db
---    );
+    rst_debounce : debounce
+    GENERIC MAP(
+        clk_freq => clk_freq,
+        stable_time => stable_time
+    )
+    PORT MAP(
+        clk => clk,
+        rst => rst_db,
+        button => rst,
+        result => rst_db
+    );
 
---    show_debounce : debounce
---    GENERIC MAP(
---        clk_freq => clk_freq,
---        stable_time => stable_time
---    )
---    PORT MAP(
---        clk => clk,
---        rst => rst_db,
---        button => show,
---        result => show_db
---    );
+    show_debounce : debounce
+    GENERIC MAP(
+        clk_freq => clk_freq,
+        stable_time => stable_time
+    )
+    PORT MAP(
+        clk => clk,
+        rst => rst,
+        button => show,
+        result => show_db
+    );
 
---    enter_debounce : debounce
---    GENERIC MAP(
---        clk_freq => clk_freq,
---        stable_time => stable_time
---    )
---    PORT MAP(
---        clk => clk,
---        rst => rst_db,
---        button => enter,
---        result => enter_db
---    );
+    enter_debounce : debounce
+    GENERIC MAP(
+        clk_freq => clk_freq,
+        stable_time => stable_time
+    )
+    PORT MAP(
+        clk => clk,
+        rst => rst,
+        button => enter,
+        result => enter_db
+    );
 
     scrt_num : rand_gen
     PORT MAP(
         clk => clk,
         rst => rst,
-        --rst => rst_db,
         seed => "01001111",
         output => secret_number
     );
 
-    --show_led : PROCESS (clk, show_db)
-    show_led : PROCESS (clk, show)
-    begin
-        IF show = '1' then
-            leds <= secret_number;
-        ELSE
-            leds <= (OTHERS => '0');
-        END IF;
-    END PROCESS;
-
-    check_number : PROCESS (clk, enter)
-    begin
-        IF switches = secret_number then
-            green_led <= '1';
-            blue_led <= '0';
-            red_led <= '0';
-        ELSIF switches < secret_number then
-            green_led <= '0';
-            blue_led <= '1';
-            red_led <= '0';
-        ELSIF switches > secret_number then
-            green_led <= '0';
-            blue_led <= '0';
-            red_led <= '1';
-        ELSE
-            green_led <= '0';
-            blue_led <= '0';
-            red_led <= '0';
-
-        END IF;
-    END PROCESS;
-
-    rst_led : PROCESS (clk, rst)
-    begin
-        IF rst = '1' then
+    game : PROCESS (clk, show_db, rst, enter_db)
+    BEGIN
+        IF rst = '1' THEN
             green_led <= '0';
             blue_led <= '0';
             red_led <= '0';
             leds <= (OTHERS => '0');
+        ELSE
+            IF rising_edge(clk) THEN
+                IF show_db = '1' THEN
+                    leds <= secret_number;
+                ELSIF enter = '1' THEN
+                    IF switches = secret_number THEN
+                        green_led <= '1';
+                        blue_led <= '0';
+                        red_led <= '0';
+                    ELSIF switches < secret_number THEN
+                        green_led <= '0';
+                        blue_led <= '1';
+                        red_led <= '0';
+                    ELSIF switches > secret_number THEN
+                        green_led <= '0';
+                        blue_led <= '0';
+                        red_led <= '1';
+                        --ELSE
+                        --    green_led <= '0';
+                        --   blue_led <= '0';
+                        --    red_led <= '0';
+                    END IF;
+                END IF;
+            END IF;
         END IF;
     END PROCESS;
+    --    --show_led : PROCESS (clk, show_db)
+    --    show_led : PROCESS (clk, show)
+    --    begin
+    --        IF show = '1' then
+    --            leds <= secret_number;
+    --        ELSE
+    --            leds <= (OTHERS => '0');
+    --        END IF;
+    --    END PROCESS;
+
+    --    check_number : PROCESS (clk, enter)
+    --    begin
+    --        IF switches = secret_number then
+    --            green_led <= '1';
+    --            blue_led <= '0';
+    --            red_led <= '0';
+    --        ELSIF switches < secret_number then
+    --            green_led <= '0';
+    --            blue_led <= '1';
+    --            red_led <= '0';
+    --        ELSIF switches > secret_number then
+    --            green_led <= '0';
+    --            blue_led <= '0';
+    --            red_led <= '1';
+    --        ELSE
+    --            green_led <= '0';
+    --            blue_led <= '0';
+    --            red_led <= '0';
+
+    --        END IF;
+    --    END PROCESS;
+
+    --    rst_led : PROCESS (clk, rst)
+    --    begin
+    --        IF rst = '1' then
+    --            green_led <= '0';
+    --            blue_led <= '0';
+    --            red_led <= '0';
+    --            leds <= (OTHERS => '0');
+    --        END IF;
+    --    END PROCESS;
 
 END Behavioral;
