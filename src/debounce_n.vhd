@@ -13,7 +13,7 @@ ENTITY debounce_n IS
         result : OUT STD_LOGIC); --debounced signal
 END debounce_n;
 
-ARCHITECTURE Behavioral OF debounce IS
+ARCHITECTURE Behavioral OF debounce_n IS
 
     SIGNAL flipflops : STD_LOGIC_VECTOR (1 DOWNTO 0); -- Input flip-flop
     SIGNAL counter_set : STD_LOGIC; -- Sync reset to zero
