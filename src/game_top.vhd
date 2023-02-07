@@ -48,60 +48,62 @@ ARCHITECTURE Behavioral OF number_guess IS
 
 BEGIN
 
-    rst_debounce : debounce
-    GENERIC MAP(
-        clk_freq => clk_freq,
-        stable_time => stable_time
-    )
-    PORT MAP(
-        clk => clk,
-        rst => rst_db,
-        button => rst,
-        result => rst_db
-    );
+--    rst_debounce : debounce
+--    GENERIC MAP(
+--        clk_freq => clk_freq,
+--        stable_time => stable_time
+--    )
+--    PORT MAP(
+--        clk => clk,
+--        rst => rst_db,
+--        button => rst,
+--        result => rst_db
+--    );
 
-    show_debounce : debounce
-    GENERIC MAP(
-        clk_freq => clk_freq,
-        stable_time => stable_time
-    )
-    PORT MAP(
-        clk => clk,
-        rst => rst_db,
-        button => show,
-        result => show_db
-    );
+--    show_debounce : debounce
+--    GENERIC MAP(
+--        clk_freq => clk_freq,
+--        stable_time => stable_time
+--    )
+--    PORT MAP(
+--        clk => clk,
+--        rst => rst_db,
+--        button => show,
+--        result => show_db
+--    );
 
-    enter_debounce : debounce
-    GENERIC MAP(
-        clk_freq => clk_freq,
-        stable_time => stable_time
-    )
-    PORT MAP(
-        clk => clk,
-        rst => rst_db,
-        button => enter,
-        result => enter_db
-    );
+--    enter_debounce : debounce
+--    GENERIC MAP(
+--        clk_freq => clk_freq,
+--        stable_time => stable_time
+--    )
+--    PORT MAP(
+--        clk => clk,
+--        rst => rst_db,
+--        button => enter,
+--        result => enter_db
+--    );
 
     scrt_num : rand_gen
     PORT MAP(
         clk => clk,
-        rst => rst_db,
+        rst => rst,
+        --rst => rst_db,
         seed => "01001111",
         output => secret_number
     );
 
-    show_led : PROCESS (clk, show_db)
+    --show_led : PROCESS (clk, show_db)
+    show_led : PROCESS (clk, show)
     begin
-        IF show_db = '1' then
+        IF show = '1' then
             leds <= secret_number;
         ELSE
             leds <= (OTHERS => '0');
         END IF;
     END PROCESS;
 
-    check_number : PROCESS (clk, enter_db)
+    check_number : PROCESS (clk, enter)
     begin
         IF switches = secret_number then
             green_led <= '1';
@@ -123,9 +125,9 @@ BEGIN
         END IF;
     END PROCESS;
 
-    rst_led : PROCESS (clk, rst_db)
+    rst_led : PROCESS (clk, rst)
     begin
-        IF rst_db = '1' then
+        IF rst = '1' then
             green_led <= '0';
             blue_led <= '0';
             red_led <= '0';

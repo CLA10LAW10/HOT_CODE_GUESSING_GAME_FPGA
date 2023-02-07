@@ -25,19 +25,19 @@ BEGIN
     PROCESS (clk, rst)
         VARIABLE count : INTEGER RANGE 0 TO clk_freq * stable_time/1000;
     BEGIN
-        IF rst = '1' THEN
-            flipflops <= (OTHERS => '0');   -- Clear input flipflops.
-            result <= '0';                  -- Clear result register.
+        IF rst = '1' THEN -- Should this be 0 or 1
+            flipflops <= (OTHERS => '0'); -- Clear input flipflops.
+            result <= '0'; -- Clear result register.
         ELSIF rising_edge (clk) THEN
-            flipflops(0) <= button;         -- Store button value in 1st ff.
-            flipflops(1) <= flipflops(0);   -- Store 1st ff value in 2nd ff.
+            flipflops(0) <= button; -- Store button value in 1st ff.
+            flipflops(1) <= flipflops(0); -- Store 1st ff value in 2nd ff.
 
             IF counter_set = '1' THEN
                 count := 0;
             ELSIF (count < clk_freq * stable_time / 1000) THEN
                 count := count + 1;
-            ELSE                            -- Stable input is met.
-                result <= flipflops(1);     -- Output the stable value.
+            ELSE -- Stable input is met.
+                result <= flipflops(1); -- Output the stable value.
             END IF;
         END IF;
 
