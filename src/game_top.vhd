@@ -56,7 +56,7 @@ BEGIN
     PORT MAP(
         clk => clk,
         rst => rst_db,
-        button => rst_db,
+        button => rst,
         result => rst_db
     );
 

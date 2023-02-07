@@ -29,9 +29,9 @@ ARCHITECTURE Behavioral OF number_guess_tb IS
     SIGNAL enter_tb : STD_LOGIC;
     SIGNAL switches_tb : STD_LOGIC_VECTOR (3 DOWNTO 0);
     SIGNAL leds_tb : STD_LOGIC_VECTOR (3 DOWNTO 0);
-    SIGNAL red_tb : STD_LOGIC;
-    SIGNAL blue_tb : STD_LOGIC;
-    SIGNAL green_tb : STD_LOGIC;
+    SIGNAL red_led_tb : STD_LOGIC;
+    SIGNAL blue_led_tb : STD_LOGIC;
+    SIGNAL green_led_tb : STD_LOGIC;
 
     CONSTANT CP : TIME := 8ns;
 
@@ -45,9 +45,9 @@ BEGIN
         enter => enter_tb,
         switches => switches_tb,
         leds => leds_tb,
-        red => red_tb,
-        blue => blue_tb,
-        green => green_tb
+        red_led => red_led_tb,
+        blue_led => blue_led_tb,
+        green_led => green_led_tb
     );
 
     -- Clock generation process
@@ -62,6 +62,8 @@ BEGIN
     -- Input vector
     input_gen : PROCESS
     BEGIN
+        show_tb <= '0';
+        
         rst_tb <= '0';
         WAIT FOR CP;
         rst_tb <= '1';
@@ -169,7 +171,7 @@ BEGIN
         enter_tb <= '0';
         WAIT FOR 2000000 * CP;
 
-        show_tb <= '1'
+        show_tb <= '1';
         WAIT FOR 2000000 * CP;
         show_tb <= '0';
         WAIT FOR 2000000 * CP;
@@ -179,7 +181,7 @@ BEGIN
         rst_tb <= '0';
         WAIT FOR 2000000 * CP;
 
-        show_tb <= '1'
+        show_tb <= '1';
         WAIT FOR 2000000 * CP;
         show_tb <= '0';
         WAIT FOR 4000000 * CP;
