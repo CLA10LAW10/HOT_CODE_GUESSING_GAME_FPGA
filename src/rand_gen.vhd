@@ -18,17 +18,18 @@ ARCHITECTURE Behavioral OF rand_gen IS
 
 BEGIN
 
-    stateReg : PROCESS (clk, rst)
+    stateReg : PROCESS (clk, seed, rst)
         VARIABLE seed_check : NATURAL RANGE 0 TO 1 := 0;
     BEGIN
         IF rst = '0' AND seed_check = 0 THEN
             currstate <= seed;
             seed_check := 1;
-        ELSIF (rising_edge (clk)) and seed_check = 0 THEN
+        ELSIF (rising_edge (clk)) THEN
             currstate <= nextstate;
-        ELSIF rst = '1' THEN
-            seed_check := 0;
-            output <= currstate(7 DOWNTO 4);
+            IF rst = '1' THEN
+                seed_check := 0;
+                output <= currstate(7 DOWNTO 4);
+            END IF;
         END IF;
     END PROCESS;
 

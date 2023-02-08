@@ -1,7 +1,7 @@
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
-use std.env.stop;
+USE std.env.stop;
 
 ENTITY number_guess_tb IS
 
@@ -63,128 +63,52 @@ BEGIN
     input_gen : PROCESS
     BEGIN
         show_tb <= '0';
-        
+        enter_tb <= '0';
+        switches_tb <= "0000";
+
+        WAIT FOR 2000000 * CP;
+        rst_tb <= '1';
+        WAIT FOR 2000000 * CP;
         rst_tb <= '0';
         WAIT FOR 2000000 * CP;
         rst_tb <= '1';
-        WAIT FOR 4000000 * CP;
-        rst_tb <= '0';
         WAIT FOR 2000000 * CP;
-        rst_tb <= '1';
-        WAIT FOR 3000000 * CP;
         rst_tb <= '0';
         WAIT FOR 2000000 * CP;
 
-        switches_tb <= "0000";
-        enter_tb <= '1';
+        show_tb <= '1';
         WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
+        show_tb <= '0';
+        WAIT FOR 2000000 * CP;
+
+        rst_tb <= '1';
+        WAIT FOR 1885999 * CP;
+        rst_tb <= '0';
         WAIT FOR 2000000 * CP;
 
         switches_tb <= "0001";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
         WAIT FOR 2000000 * CP;
 
-        switches_tb <= "0010";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        switches_tb <= "0011";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        switches_tb <= "0100";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        switches_tb <= "0101";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        switches_tb <= "0110";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        switches_tb <= "0111";
         enter_tb <= '1';
         WAIT FOR 2000000 * CP;
         enter_tb <= '0';
         WAIT FOR 2000000 * CP;
 
         switches_tb <= "1000";
+        WAIT FOR 2000000 * CP;
+
         enter_tb <= '1';
         WAIT FOR 2000000 * CP;
         enter_tb <= '0';
         WAIT FOR 2000000 * CP;
 
-        switches_tb <= "1001";
+        switches_tb <= "0011";
+        WAIT FOR 2000000 * CP;
+
         enter_tb <= '1';
         WAIT FOR 2000000 * CP;
         enter_tb <= '0';
         WAIT FOR 2000000 * CP;
-
-        switches_tb <= "1010";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        switches_tb <= "1011";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        switches_tb <= "1100";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        switches_tb <= "1101";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        switches_tb <= "1110";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        switches_tb <= "1111";
-        enter_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        enter_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        show_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        show_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        rst_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        rst_tb <= '0';
-        WAIT FOR 2000000 * CP;
-
-        show_tb <= '1';
-        WAIT FOR 2000000 * CP;
-        show_tb <= '0';
-        WAIT FOR 4000000 * CP;
 
         stop;
     END PROCESS;
