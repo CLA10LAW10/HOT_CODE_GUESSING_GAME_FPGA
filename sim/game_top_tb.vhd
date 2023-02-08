@@ -94,7 +94,7 @@ BEGIN
         enter_tb <= '0';
         WAIT FOR 2000000 * CP;
 
-        switches_tb <= "1000";
+        switches_tb <= "1111";
         WAIT FOR 2000000 * CP;
 
         enter_tb <= '1';
@@ -102,7 +102,7 @@ BEGIN
         enter_tb <= '0';
         WAIT FOR 2000000 * CP;
 
-        switches_tb <= "0011";
+        switches_tb <= "1101";
         WAIT FOR 2000000 * CP;
 
         enter_tb <= '1';

@@ -50,12 +50,25 @@ ARCHITECTURE Behavioral OF number_guess IS
 
     CONSTANT clk_freq : INTEGER := 125_000_000;
     CONSTANT stable_time : INTEGER := 10;
+    CONSTANT stable_flash_time : INTEGER := 62_500_000;
 
     SIGNAL secret_number : STD_LOGIC_VECTOR (3 DOWNTO 0);
     SIGNAL seed : STD_LOGIC_VECTOR (3 DOWNTO 0);
     SIGNAL rst_db : STD_LOGIC;
     SIGNAL show_db : STD_LOGIC;
     SIGNAL enter_db : STD_LOGIC;
+
+    --    PROCEDURE flash(VARIABLE on_off : OUT BOOLEAN;
+    --    VARIABLE count : INTEGER;
+    --    CONSTANT clk_freq : INTEGER;
+    --    CONSTANT stable_flash_time : INTEGER) IS
+    --BEGIN
+    --    count := count + 1;
+    --    IF count = clk_freq / stable_flash_time THEN
+    --        on_off := NOT on_off;
+    --        count := 0;
+    --    END IF;
+    --END PROCEDURE;
 
 BEGIN
 
@@ -103,22 +116,40 @@ BEGIN
         output => secret_number
     );
 
-    game : PROCESS (clk, show, rst, enter_db)
+    game : PROCESS (clk, show_db, rst, enter_db)
+        VARIABLE count : INTEGER RANGE 0 TO stable_flash_time;
+        VARIABLE toggle : BOOLEAN;
     BEGIN
         IF rst = '1' THEN
             green_led <= '0';
             blue_led <= '0';
             red_led <= '0';
             leds <= (OTHERS => '0');
+            count := 0;
         ELSE
             IF rising_edge(clk) THEN
-                IF show = '1' THEN
+                IF show_db = '1' THEN
                     leds <= secret_number;
                 ELSIF enter = '1' THEN
                     IF switches = secret_number THEN
-                        green_led <= '1';
                         blue_led <= '0';
                         red_led <= '0';
+                        toggle := true;
+                        IF toggle THEN
+                            count := count + 1;
+                            IF count = stable_flash_time THEN
+                                toggle := NOT toggle;
+                                green_led <= '1';
+                                count := 0;
+                            END IF;
+                        ELSE
+                            count := count + 1;
+                            IF count = stable_flash_time THEN
+                                toggle := NOT toggle;
+                                green_led <= '0';
+                                count := 0;
+                            END IF;
+                        END IF;
                     ELSIF switches < secret_number THEN
                         green_led <= '0';
                         blue_led <= '1';
@@ -127,10 +158,6 @@ BEGIN
                         green_led <= '0';
                         blue_led <= '0';
                         red_led <= '1';
-                        --ELSE
-                        --    green_led <= '0';
-                        --   blue_led <= '0';
-                        --    red_led <= '0';
                     END IF;
                 END IF;
             END IF;
