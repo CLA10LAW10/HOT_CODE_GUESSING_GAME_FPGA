@@ -110,7 +110,7 @@ BEGIN
         enter_tb <= '0';
         WAIT FOR 2000000 * CP;
 
-        stop;
+        WAIT;
     END PROCESS;
 
 END Behavioral;

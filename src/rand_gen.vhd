@@ -36,6 +36,4 @@ BEGIN
     feedback <= currstate(4) XOR currstate(3) XOR currstate(2) XOR currstate(0);
     nextstate <= feedback & currstate(7 DOWNTO 1);
 
-    --output <= currstate(7 DOWNTO 4);
-
 END Behavioral;

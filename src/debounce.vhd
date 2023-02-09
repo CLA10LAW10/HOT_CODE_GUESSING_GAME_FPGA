@@ -8,7 +8,7 @@ ENTITY debounce IS
         stable_time : INTEGER := 10); --time button must remain stable in ms
     PORT (
         clk : IN STD_LOGIC; --input clock
-        rst : IN STD_LOGIC; --asynchronous active low reset
+        rst : IN STD_LOGIC; --asynchronous active high reset
         button : IN STD_LOGIC; --input signal to be debounced
         result : OUT STD_LOGIC); --debounced signal
 END debounce;
@@ -25,7 +25,7 @@ BEGIN
     PROCESS (clk, rst)
         VARIABLE count : INTEGER RANGE 0 TO clk_freq * stable_time/1000;
     BEGIN
-        IF rst = '1' THEN -- Should this be 0 or 1
+        IF rst = '1' THEN
             flipflops <= (OTHERS => '0'); -- Clear input flipflops.
             result <= '0'; -- Clear result register.
         ELSIF rising_edge (clk) THEN
