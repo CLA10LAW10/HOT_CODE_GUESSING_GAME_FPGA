@@ -23,7 +23,7 @@ BEGIN
     counter_set <= flipflops(0) XOR flipflops(1); -- Determine when to start/reset counter.
 
     PROCESS (clk, rst)
-        VARIABLE count : INTEGER RANGE 0 TO clk_freq * stable_time/1000; -- count from 0 to stable debounce time
+        VARIABLE count : INTEGER RANGE 0 TO clk_freq * stable_time / 1000; -- count from 0 to stable debounce time
     BEGIN
         IF rst = '1' THEN                   --asynchronous active high reset
             flipflops <= (OTHERS => '0');   -- Clear input flipflops.

@@ -56,7 +56,7 @@ ARCHITECTURE Behavioral OF number_guess IS
         VARIABLE count : OUT INTEGER) IS    -- Variable count from 0 to stable time as a delay
     BEGIN
 
-        IF count = clk_freq / stable_led / 2 THEN   -- If 0.5 Hz, 1s Period is met
+        IF count = clk_freq * stable_led / 2 THEN   -- If 0.5 Hz, 1s Period is met
             toggle := NOT toggle;                   -- Toggle to initiate LED toggle
             count := 0;                             -- Reset counter to begin again
         ELSE                                        -- Not yet at 0.5Hz to meet a 1s period, keep counting.
@@ -104,6 +104,7 @@ BEGIN
     -- Play the game!!
     game : PROCESS (clk, show_db, rst, enter_db)
     BEGIN
+        -- Reset all signals and outputs, active high
         IF rst = '1' THEN
             flash <= '0';
             blue_led <= '0';
@@ -111,21 +112,21 @@ BEGIN
             leds <= (OTHERS => '0');
         ELSE
             IF rising_edge(clk) THEN
-                IF show_db = '1' THEN
-                    leds <= secret_number;
-                ELSIF enter = '1' THEN
-                    IF switches = secret_number THEN
-                        blue_led <= '0';
-                        red_led <= '0';
-                        flash <= '1';
-                    ELSIF switches < secret_number THEN
-                        blue_led <= '1';
-                        red_led <= '0';
-                        flash <= '0';
-                    ELSIF switches > secret_number THEN
-                        blue_led <= '0';
-                        red_led <= '1';
-                        flash <= '0';
+                IF show_db = '1' THEN                   -- If show button is pushed
+                    leds <= secret_number;              -- Show secret number using LEDs above switches
+                ELSIF enter = '1' THEN                  -- If enter button is pushed, making a guess, check switch inputs!
+                    IF switches = secret_number THEN    -- If the guessed number is correct, FLASH green lights!
+                        blue_led <= '0';                -- Blue off
+                        red_led <= '0';                 -- Red off
+                        flash <= '1';                   -- Flash signal high to indicate flashing LED, Correct number
+                    ELSIF switches < secret_number THEN -- If the guessed number is lower then secret number, indicate low
+                        blue_led <= '1';                -- Blue on, indicating low
+                        red_led <= '0';                 -- Red off
+                        flash <= '0';                   -- Green off
+                    ELSIF switches > secret_number THEN -- If the guessed number is higher the the secret number, indicate high
+                        blue_led <= '0';                -- Blue off
+                        red_led <= '1';                 -- Red on, indicating high
+                        flash <= '0';                   -- Green off
                     END IF;
                 END IF;
             END IF;
@@ -134,19 +135,19 @@ BEGIN
 
     -- You win! Flash the green light! (Or did you hit show and enter the correct value ;)
     flash_green : PROCESS (flash, clk)
-        VARIABLE count : INTEGER RANGE 0 TO stable_led := 0;
-        VARIABLE toggle : BOOLEAN := true;
+        VARIABLE count : INTEGER RANGE 0 TO clk_freq * stable_led / 2 := 0; -- Variable count from 0 to 62_500_000, 0.5 Hz
+        VARIABLE toggle : BOOLEAN := true; -- Boolean toggle, used as a conditional to then toggle green LED.
     BEGIN
-        IF flash = '0' THEN
-            green_led <= '0';
-        ELSE
+        IF flash = '0' THEN                                     -- If flash it 0, do not flash
+            green_led <= '0';                                   -- Keep green led off
+        ELSE                                                    -- Flash is high, flash green LED
             IF rising_edge(clk) THEN
-                IF toggle THEN
-                    green_led <= '1';
-                    delay(clk_freq, stable_led, toggle, count);
-                ELSE
-                    green_led <= '0';
-                    delay(clk_freq, stable_led, toggle, count);
+                IF toggle THEN                                  -- If toggle is high
+                    green_led <= '1';                           -- turn green LED on
+                    delay(clk_freq, stable_led, toggle, count); -- Deblay for 500 ms
+                ELSE                                            -- If toggle is low
+                    green_led <= '0';                           -- Turn green LED off
+                    delay(clk_freq, stable_led, toggle, count); -- Deblay for 500 ms
                 END IF;
             END IF;
         END IF;
