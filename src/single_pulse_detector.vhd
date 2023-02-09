@@ -4,32 +4,33 @@ USE IEEE.NUMERIC_STD.ALL;
 
 ENTITY single_pulse_detector IS
     PORT (
-        clk : IN STD_LOGIC;
-        rst : IN STD_LOGIC;
-        input_signal : IN STD_LOGIC;
-        output_pulse : OUT STD_LOGIC);
+        clk : IN STD_LOGIC;             -- Input clock
+        rst : IN STD_LOGIC;             -- Asynchronous active high reset
+        input_signal : IN STD_LOGIC;    -- Input signal to detect
+        output_pulse : OUT STD_LOGIC);  -- Detected single pulse
 END single_pulse_detector;
 
 ARCHITECTURE Behavioral OF single_pulse_detector IS
 
-    SIGNAL ff1 : STD_LOGIC;
-    SIGNAL ff2 : STD_LOGIC;
+    SIGNAL ff1 : STD_LOGIC; -- Input flip-flop
+    SIGNAL ff2 : STD_LOGIC; -- Input flip-flop
 
 BEGIN
 
     PROCESS (clk, rst)
     BEGIN
 
-        IF rst = '1' THEN
-            ff1 <= '0';
-            ff2 <= '0';
+        IF rst = '1' THEN           -- Asynchronous active high reset
+            ff1 <= '0';             -- Clear input flipflop 1.
+            ff2 <= '0';             -- Clear input flipflop 2.
         ELSIF rising_edge(clk) THEN
-            ff1 <= input_signal;
-            ff2 <= ff1;
+            ff1 <= input_signal;    -- Store input value in 1st ff.
+            ff2 <= ff1;             -- Store 1st ff value in 2nd ff.
+
         END IF;
 
     END PROCESS;
 
-    output_pulse <= ff1 AND NOT ff2;
+    output_pulse <= ff1 AND NOT ff2; -- Determine rising edge, begin delay.
 
 END Behavioral;
