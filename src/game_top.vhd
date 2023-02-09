@@ -42,8 +42,6 @@ ARCHITECTURE Behavioral OF number_guess IS
     CONSTANT stable_led : INTEGER := 1;         -- Constant 1 Second stable time
 
     SIGNAL secret_number : STD_LOGIC_VECTOR (3 DOWNTO 0);   -- Signal to pass secret number
-    --SIGNAL seed : STD_LOGIC_VECTOR (3 DOWNTO 0); -- Signal to 
-    --SIGNAL rst_db : STD_LOGIC;
     SIGNAL show_db : STD_LOGIC;                             -- Signal to hold debounced show button value
     SIGNAL enter_db : STD_LOGIC;                            -- Signal to hold debounced enter button value
     SIGNAL flash : STD_LOGIC;                               -- Signal to indicate when to flash the green LED
