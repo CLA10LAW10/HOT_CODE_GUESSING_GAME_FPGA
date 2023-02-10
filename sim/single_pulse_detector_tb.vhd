@@ -8,10 +8,10 @@ END single_pulse_detector_tb;
 
 ARCHITECTURE Behavioral OF single_pulse_detector_tb IS
 
-    SIGNAL clk_tb : STD_LOGIC := '0';
-    SIGNAL rst_tb : STD_LOGIC := '0';
-    SIGNAL input_signal_tb : STD_LOGIC := '0';
-    SIGNAL output_pulse_tb : STD_LOGIC := '0';
+    SIGNAL clk_tb : STD_LOGIC := '0';           -- Signal simulated clock 
+    SIGNAL rst_tb : STD_LOGIC := '0';           -- Signal simulated reset button
+    SIGNAL input_signal_tb : STD_LOGIC := '0';  -- Signal simulated input
+    SIGNAL output_pulse_tb : STD_LOGIC := '0';  -- Signal simulated output
 
     CONSTANT CP : TIME := 10ns;
 
@@ -38,11 +38,15 @@ BEGIN
     -- Input vector
     input_gen : process
     BEGIN
+        -- Reset single_pulse_detector
         rst_tb <= '1';
         wait for CP;
         rst_tb <= '0';
         wait for 2 * CP;
 
+        -- Set input signal high, then low.
+        -- Observe how although high for a long time, the high pulse is only high for one clock pulse.
+        -- Will also only detect rising edges.
         input_signal_tb <= '1';
         wait for 5 * CP;
         input_signal_tb <= '0';

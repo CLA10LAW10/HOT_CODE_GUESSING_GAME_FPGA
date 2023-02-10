@@ -10,21 +10,22 @@ architecture Behavioral of rand_gen_tb is
 
 component rand_gen IS
     PORT (
-        clk, rst : IN STD_LOGIC;
-        seed : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-        output : OUT STD_LOGIC_VECTOR (3 DOWNTO 0)
+        clk, rst : IN STD_LOGIC;                    -- Input clock and reset
+        seed : IN STD_LOGIC_VECTOR(7 DOWNTO 0);     -- Input Seed for initial value
+        output : OUT STD_LOGIC_VECTOR (3 DOWNTO 0)  -- Output Random generated value
     );
 END component rand_gen;
 
-signal clk_tb : STD_LOGIC;
-signal rst_tb : STD_LOGIC;
-signal seed_tb : STD_LOGIC_VECTOR (7 DOWNTO 0);
-signal output_tb : STD_LOGIC_VECTOR (3 DOWNTO 0);
+signal clk_tb : STD_LOGIC;                          -- Signal simulated clock 
+signal rst_tb : STD_LOGIC;                          -- Signal simulated reset button
+signal seed_tb : STD_LOGIC_VECTOR (7 DOWNTO 0);     -- Signal simulated seed value
+signal output_tb : STD_LOGIC_VECTOR (3 DOWNTO 0);   -- Signal simulated output
 
 constant CP : time := 10ns;
 
 begin
 
+-- Instantiate the unit under test
 uut : rand_gen 
     port map (
         clk => clk_tb,
@@ -46,16 +47,23 @@ uut : rand_gen
     input_gen : process
     BEGIN
 
+        wait for CP; -- Observe the unknown
+        seed_tb <= "01001111"; -- Seed the module
         wait for CP;
-        seed_tb <= "01001111";
-        wait for CP;
+
+        -- Reset the module and let it generate random numbers
         rst_tb <= '0';
         wait for 5 * CP;
         rst_tb <= '1';
         wait for 5 * CP;
+
+        -- Wait to observe a single value is help when reset is low.
+        -- No more generating
         rst_tb <= '0';
         wait for 5 * CP;
 
+        -- Reset again to observe the random generation
+        -- Until once again held low to see the generated output
         rst_tb <= '1';
         wait for 3 * CP;
         rst_tb <= '0';
