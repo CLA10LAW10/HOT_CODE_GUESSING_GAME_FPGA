@@ -33,7 +33,7 @@ ARCHITECTURE Behavioral OF number_guess_tb IS
     SIGNAL blue_led_tb : STD_LOGIC;                     -- Signal simulated blue output LED
     SIGNAL green_led_tb : STD_LOGIC;                    -- Signal simulated green output LED
 
-    CONSTANT CP : TIME := 20ns;
+    CONSTANT CP : TIME := 8ns;
 
 BEGIN
 
@@ -120,7 +120,7 @@ BEGIN
         enter_tb <= '1';
         WAIT FOR 2000000 * CP;
         enter_tb <= '0';
-        WAIT FOR 50_000_000 * CP;
+        WAIT FOR 125_000_000 * CP;
 
         stop;
     END PROCESS;

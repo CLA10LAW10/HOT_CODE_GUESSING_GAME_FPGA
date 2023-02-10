@@ -37,28 +37,34 @@ ARCHITECTURE Behavioral OF number_guess IS
         );
     END COMPONENT rand_gen;
 
-    CONSTANT clk_freq : INTEGER := 50_000_000;  -- Consant system clock frequency in Hz
+    -- Constants for debounce
+    CONSTANT clk_freq : INTEGER := 125_000_000;  -- Consant system clock frequency in Hz
     CONSTANT stable_time : INTEGER := 10;       -- Constant 10 ms stable button time.
     CONSTANT stable_led : INTEGER := 1;         -- Constant 1 Second stable time
 
+    -- Signals used debounce
     SIGNAL secret_number : STD_LOGIC_VECTOR (3 DOWNTO 0);   -- Signal to pass secret number
     SIGNAL show_db : STD_LOGIC;                             -- Signal to hold debounced show button value
     SIGNAL enter_db : STD_LOGIC;                            -- Signal to hold debounced enter button value
-    SIGNAL flash : STD_LOGIC;                               -- Signal to indicate when to flash the green LED
+
+    -- Signals used to flash green LED
+    SIGNAL flash : STD_LOGIC;                                           -- Signal to indicate when to flash the green LED
+    SIGNAL count : INTEGER RANGE 0 TO clk_freq * stable_led / 2 := 0;   -- Variable count from 0 to 62_500_000, 0.5 Hz
+    SIGNAL toggle : BOOLEAN := true;                                    -- Boolean toggle, used as a conditional to then toggle green LED.
 
     -- Procedure used as a delay to flash the green LED
     PROCEDURE delay(                        
         CONSTANT clk_freq : INTEGER;        -- Consant system clock frequency in Hz
         CONSTANT stable_led : INTEGER;      -- Constant 1 Second stable time
-        VARIABLE toggle : OUT BOOLEAN;      -- Boolean toggle to indicate when to toggle
-        VARIABLE count : OUT INTEGER) IS    -- Variable count from 0 to stable time as a delay
+        SIGNAL toggle : OUT BOOLEAN;        -- Boolean toggle to indicate when to toggle
+        SIGNAL count : OUT INTEGER) IS      -- Variable count from 0 to stable time as a delay
     BEGIN
 
         IF count = clk_freq * stable_led / 2 THEN   -- If 0.5 Hz, 1s Period is met
-            toggle := NOT toggle;                   -- Toggle to initiate LED toggle
-            count := 0;                             -- Reset counter to begin again
+            toggle <= NOT toggle;                   -- Toggle to initiate LED toggle
+            count <= 0;                             -- Reset counter to begin again
         ELSE                                        -- Not yet at 0.5Hz to meet a 1s period, keep counting.
-            count := count + 1;                     -- Count and continue delaying
+            count <= count + 1;                     -- Count and continue delaying
         END IF;
     END PROCEDURE;
 
@@ -133,8 +139,6 @@ BEGIN
 
     -- You win! Flash the green light! (Or did you hit show and enter the correct value ;)
     flash_green : PROCESS (flash, clk)
-        VARIABLE count : INTEGER RANGE 0 TO clk_freq * stable_led / 2 := 0; -- Variable count from 0 to 62_500_000, 0.5 Hz
-        VARIABLE toggle : BOOLEAN := true; -- Boolean toggle, used as a conditional to then toggle green LED.
     BEGIN
         IF flash = '0' THEN                                     -- If flash it 0, do not flash
             green_led <= '0';                                   -- Keep green led off
