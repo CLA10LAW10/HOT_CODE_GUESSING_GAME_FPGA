@@ -33,7 +33,7 @@ ARCHITECTURE Behavioral OF number_guess_tb IS
     SIGNAL blue_led_tb : STD_LOGIC;                     -- Signal simulated blue output LED
     SIGNAL green_led_tb : STD_LOGIC;                    -- Signal simulated green output LED
 
-    CONSTANT CP : TIME := 8ns;
+    CONSTANT CP : TIME := 20ns;
 
 BEGIN
 
