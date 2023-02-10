@@ -38,7 +38,7 @@ ARCHITECTURE Behavioral OF number_guess IS
     END COMPONENT rand_gen;
 
     -- Constants for debounce
-    CONSTANT clk_freq : INTEGER := 125_000_000;  -- Consant system clock frequency in Hz
+    CONSTANT clk_freq : INTEGER := 125_000_000; -- Consant system clock frequency in Hz
     CONSTANT stable_time : INTEGER := 10;       -- Constant 10 ms stable button time.
     CONSTANT stable_led : INTEGER := 1;         -- Constant 1 Second stable time
 
