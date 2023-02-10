@@ -49,15 +49,15 @@ ARCHITECTURE Behavioral OF number_guess IS
 
     -- Signals used to flash green LED
     SIGNAL flash : STD_LOGIC;                                           -- Signal to indicate when to flash the green LED
-    SIGNAL count : INTEGER RANGE 0 TO clk_freq * stable_led / 2 := 0;   -- Variable count from 0 to 62_500_000, 0.5 Hz
+    SIGNAL count : INTEGER RANGE 0 TO clk_freq * stable_led / 2 := 0;   -- Signal count from 0 to 62_500_000, 0.5 Hz
     SIGNAL toggle : BOOLEAN := true;                                    -- Boolean toggle, used as a conditional to then toggle green LED.
 
     -- Procedure used as a delay to flash the green LED
     PROCEDURE delay(                        
         CONSTANT clk_freq : INTEGER;        -- Consant system clock frequency in Hz
         CONSTANT stable_led : INTEGER;      -- Constant 1 Second stable time
-        SIGNAL toggle : OUT BOOLEAN;        -- Boolean toggle to indicate when to toggle
-        SIGNAL count : OUT INTEGER) IS      -- Variable count from 0 to stable time as a delay
+        SIGNAL toggle : INOUT BOOLEAN;      -- Boolean toggle to indicate when to toggle
+        SIGNAL count : INOUT INTEGER) IS    -- Signal count from 0 to stable time as a delay
     BEGIN
 
         IF count = clk_freq * stable_led / 2 THEN   -- If 0.5 Hz, 1s Period is met
