@@ -72,38 +72,17 @@ BEGIN
 
     -- Debounce show button input
     show_debounce : debounce
-    GENERIC MAP(
-        clk_freq => clk_freq,
-        stable_time => stable_time
-    )
-    PORT MAP(
-        clk => clk,
-        rst => rst,
-        button => show,
-        result => show_db
-    );
+    GENERIC MAP(clk_freq => clk_freq, stable_time => stable_time)
+    PORT MAP(clk => clk, rst => rst, button => show, result => show_db);
 
     -- Debounce enter button input
     enter_debounce : debounce
-    GENERIC MAP(
-        clk_freq => clk_freq,
-        stable_time => stable_time
-    )
-    PORT MAP(
-        clk => clk,
-        rst => rst,
-        button => enter,
-        result => enter_db
-    );
+    GENERIC MAP(clk_freq => clk_freq,stable_time => stable_time)
+    PORT MAP(clk => clk, rst => rst, button => enter, result => enter_db);
 
     -- Generate a random number with a seed of 0x4f
     scrt_num : rand_gen
-    PORT MAP(
-        clk => clk,
-        rst => rst,
-        seed => "01001111",
-        output => secret_number
-    );
+    PORT MAP(clk => clk, rst => rst, seed => "01001111", output => secret_number);
 
     -- Play the game!!
     game : PROCESS (clk, show_db, rst, enter_db)
