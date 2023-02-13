@@ -31,6 +31,6 @@ BEGIN
 
     END PROCESS;
 
-    output_pulse <= ff1 AND NOT ff2; -- Determine rising edge, begin delay.
+    output_pulse <= ff1 AND NOT ff2; -- Detect rising edge.
 
 END Behavioral;
